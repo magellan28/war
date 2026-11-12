@@ -33,7 +33,9 @@ const smooth = (z: number, a: number, b: number) => {
 
 type RegionKey = keyof typeof regions;
 const LAYERS: {key: RegionKey; vis: (z: number) => number}[] = [
-  {key: 'pacific', vis: (z) => 1 - smooth(z, 10.2, 10.8)},
+  // half-resolution copy for wide shots (cheaper to resample), full-res when closer
+  {key: 'pacificlo', vis: (z) => 1 - smooth(z, 5.6, 5.9)},
+  {key: 'pacific', vis: (z) => smooth(z, 5.45, 5.6) * (1 - smooth(z, 10.2, 10.8))},
   {key: 'hawaii', vis: (z) => smooth(z, 6.2, 7.2)},
   {key: 'oahu', vis: (z) => smooth(z, 9.0, 10.0)},
   {key: 'harbor', vis: (z) => smooth(z, 11.3, 12.1)},

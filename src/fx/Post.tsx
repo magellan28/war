@@ -33,17 +33,17 @@ export const Vignette: React.FC<{strength?: number}> = ({strength = 0.85}) => (
 /** Tilt-shift depth of field: blur toward the horizon and foreground. */
 export const DepthOfField: React.FC<{amount?: number; topStop?: number}> = ({amount = 6, topStop = 38}) => {
   if (amount <= 0.05) return null;
-  const mask = `linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.6) ${topStop * 0.55}%, transparent ${topStop}%, transparent 82%, rgba(0,0,0,0.7) 100%)`;
+  // Two strips only (top and bottom): backdrop blur cost scales with area.
+  const top = 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.6) 55%, transparent 100%)';
+  const bot = 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)';
+  const strip = (pos: 'top' | 'bottom', h: string, mask: string) => (
+    <div style={{position: 'absolute', left: 0, right: 0, [pos]: 0, height: h, backdropFilter: `blur(${amount}px)`, WebkitBackdropFilter: `blur(${amount}px)`, maskImage: mask, WebkitMaskImage: mask, pointerEvents: 'none'}} />
+  );
   return (
-    <AbsoluteFill
-      style={{
-        backdropFilter: `blur(${amount}px)`,
-        WebkitBackdropFilter: `blur(${amount}px)`,
-        maskImage: mask,
-        WebkitMaskImage: mask,
-        pointerEvents: 'none',
-      }}
-    />
+    <AbsoluteFill style={{pointerEvents: 'none'}}>
+      {strip('top', `${topStop}%`, top)}
+      {strip('bottom', '18%', bot)}
+    </AbsoluteFill>
   );
 };
 
