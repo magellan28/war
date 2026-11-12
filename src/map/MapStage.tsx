@@ -4,6 +4,7 @@ import regions from '../../public/geo/regions.json';
 import coastPacific from '../../public/geo/coast_pacific.json';
 import coastHawaii from '../../public/geo/coast_hawaii.json';
 import coastOahu from '../../public/geo/coast_oahu.json';
+import coastHarbor from '../../public/geo/coast_harbor.json';
 import {Cam} from './camera';
 import {LonLat, scaleAt, toWorld} from './geo';
 import {C} from '../theme';
@@ -35,6 +36,7 @@ const LAYERS: {key: RegionKey; vis: (z: number) => number}[] = [
   {key: 'pacific', vis: (z) => 1 - smooth(z, 10.2, 10.8)},
   {key: 'hawaii', vis: (z) => smooth(z, 6.2, 7.2)},
   {key: 'oahu', vis: (z) => smooth(z, 9.0, 10.0)},
+  {key: 'harbor', vis: (z) => smooth(z, 11.3, 12.1)},
 ];
 // Coast rings parsed once; each frame they are projected to plane pixels in JS,
 // culled and decimated. (Drawing huge world-unit paths under a scale transform
@@ -57,7 +59,8 @@ const parseRings = (d: string): Ring[] =>
 const COASTS = [
   {rings: parseRings(coastPacific.d), vis: (z: number) => 1 - smooth(z, 6.4, 7.2)},
   {rings: parseRings(coastHawaii.d), vis: (z: number) => smooth(z, 6.4, 7.2) * (1 - smooth(z, 9.6, 10.2))},
-  {rings: parseRings(coastOahu.d), vis: (z: number) => smooth(z, 9.6, 10.2)},
+  {rings: parseRings(coastOahu.d), vis: (z: number) => smooth(z, 9.6, 10.2) * (1 - smooth(z, 11.6, 12.1))},
+  {rings: parseRings(coastHarbor.d), vis: (z: number) => smooth(z, 11.6, 12.1)},
 ];
 
 const coastPath = (rings: Ring[], cx: number, cy: number, s: number) => {

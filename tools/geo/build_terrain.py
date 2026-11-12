@@ -36,6 +36,7 @@ REGIONS = {
     "pacific": (100.0, 242.0, -4.0, 64.0, 6, "ne"),
     "hawaii": (197.6, 206.4, 18.2, 23.4, 10, "osm"),
     "oahu": (201.62, 202.42, 21.18, 21.80, 13, "osm"),
+    "harbor": (201.94, 202.075, 21.30, 21.41, 15, "harbor"),
 }
 
 
@@ -71,6 +72,14 @@ def load_land(src, lon0, lon1, lat0, lat1):
     """Return shapely land geometry in continuous east-longitude."""
     pad = 0.5
     geoms = []
+    if src == "harbor":
+        # detailed DEM-derived shoreline inside its box, coarse OSM outside it
+        gj = json.load(open(os.path.join(ROOT, "data/geo/harbor_land.geojson")))
+        hb = shape(gj["features"][0]["geometry"])
+        hbox = box(*hb.bounds)
+        rest = load_land("osm", lon0, lon1, lat0, lat1)
+        rest = affinity.translate(rest, xoff=-360).difference(hbox.buffer(-1e-6))
+        return affinity.translate(unary_union([hb, rest]), xoff=360)
     if src == "ne":
         files = ["ne_10m_land.geojson", "ne_10m_minor_islands.geojson"]
         feats = []
@@ -143,7 +152,7 @@ def build(name):
                 polys.append(g)
             elif g.geom_type == "MultiPolygon":
                 polys += list(g.geoms)
-    smooth_it = 0 if src == "ne" else 2
+    smooth_it = 2 if src == "osm" else 0
     rings = []  # (is_hole, smoothed lon/lat coords)
     for p in polys:
         rings.append((False, chaikin(p.exterior.coords, smooth_it)))
@@ -158,7 +167,7 @@ def build(name):
     px_m = 40075016.0 * math.cos(math.radians(lat_c)) / (256 * n)
     e = ndimage.gaussian_filter(elev, 0.6)
     gy, gx = np.gradient(e, px_m)
-    exaggeration = {"pacific": 9.0, "hawaii": 2.6, "oahu": 1.6}[name]
+    exaggeration = {"pacific": 9.0, "hawaii": 2.6, "oahu": 1.6, "harbor": 1.3}[name]
     gx *= exaggeration
     gy *= exaggeration
     slope = np.arctan(np.hypot(gx, gy))
@@ -178,7 +187,7 @@ def build(name):
     mott /= mott.std() + 1e-6
 
     # land: graphite with cool tint, satellite-like mottling
-    hnorm = np.clip(elev / {"pacific": 3000, "hawaii": 3000, "oahu": 1000}[name], 0, 1)
+    hnorm = np.clip(elev / {"pacific": 3000, "hawaii": 3000, "oahu": 1000, "harbor": 300}[name], 0, 1)
     land_base = np.array([60, 68, 72], np.float32)
     land_rgb = (land_base
                 + rel[..., None] * np.array([175, 185, 190], np.float32)
@@ -202,7 +211,7 @@ def build(name):
     # coastline glow baked into the texture (soft, so it survives LOD scaling;
     # the crisp 1px line itself is drawn as a vector in the engine)
     edge = np.abs(m[..., 0] - ndimage.uniform_filter(m[..., 0], 3)) * 4
-    sig = {"pacific": 2.2, "hawaii": 3.0, "oahu": 5.0}[name]
+    sig = {"pacific": 2.2, "hawaii": 3.0, "oahu": 5.0, "harbor": 6.0}[name]
     glow = ndimage.gaussian_filter(edge, sig) * 3 + ndimage.gaussian_filter(edge, sig * 4) * 2.2
     rgb = rgb + np.clip(glow, 0, 1.4)[..., None] * np.array([40, 120, 118], np.float32)
     rgb8 = np.clip(rgb, 0, 255).astype(np.uint8)
