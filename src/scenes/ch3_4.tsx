@@ -256,7 +256,7 @@ const AreaBadge: React.FC<{at: LonLat; k: string; start: number}> = ({at, k, sta
   return (
     <>
       <svg style={{position: 'absolute', left: x - r - 4, top: y - r - 4, overflow: 'visible', opacity: o}} width={2 * r + 8} height={2 * r + 8}>
-        <circle cx={r + 4} cy={r + 4} r={r} fill={C.alert} fillOpacity={0.12} stroke={C.alert} strokeWidth={2} strokeDasharray="7 5" />
+        <circle cx={r + 4} cy={r + 4} r={r} fill={C.alert} fillOpacity={0.12} stroke={C.alert} strokeWidth={2} />
       </svg>
       <div style={{position: 'absolute', left: x, top: y, transform: 'translate(-50%,-50%)', fontFamily: F.title, fontWeight: 600, fontSize: 54, color: C.alert, opacity: o, textShadow: '0 0 14px #000'}}>{k}</div>
     </>

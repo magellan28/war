@@ -105,7 +105,7 @@ export const AreaPoly: React.FC<{pts: LonLat[]; color: string; start: number; la
   return (
     <>
       <svg style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', opacity: o}} width={1} height={1}>
-        <path d={'M' + P.map((p) => p.map((v) => v.toFixed(1)).join(',')).join('L') + 'Z'} fill={color} fillOpacity={0.18} stroke={color} strokeWidth={2} strokeDasharray="6 5" />
+        <path d={'M' + P.map((p) => p.map((v) => v.toFixed(1)).join(',')).join('L') + 'Z'} fill={color} fillOpacity={0.18} stroke={color} strokeWidth={2} />
       </svg>
       {label ? (
         <div style={{position: 'absolute', left: lx, top: ly, transform: 'translate(-50%,-50%)', fontFamily: F.title, fontWeight: 600, fontSize: 46, color, opacity: o, textShadow: '0 0 12px #000'}}>{label}</div>

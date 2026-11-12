@@ -36,8 +36,9 @@ const LAYERS: {key: RegionKey; vis: (z: number) => number}[] = [
   // half-resolution copy for wide shots (cheaper to resample), full-res when closer
   {key: 'pacificlo', vis: (z) => 1 - smooth(z, 5.6, 5.9)},
   {key: 'pacific', vis: (z) => smooth(z, 5.45, 5.6) * (1 - smooth(z, 10.2, 10.8))},
-  {key: 'hawaii', vis: (z) => smooth(z, 6.2, 7.2)},
-  {key: 'oahu', vis: (z) => smooth(z, 9.0, 10.0)},
+  // coarser layers drop out once finer ones fill the view (huge upscaled tiles are costly)
+  {key: 'hawaii', vis: (z) => smooth(z, 6.2, 7.2) * (1 - smooth(z, 11.8, 12.3))},
+  {key: 'oahu', vis: (z) => smooth(z, 9.0, 10.0) * (1 - smooth(z, 14.3, 14.8))},
   {key: 'harbor', vis: (z) => smooth(z, 11.3, 12.1)},
   {key: 'row', vis: (z) => smooth(z, 14.4, 15.1)},
 ];
@@ -69,21 +70,41 @@ const COASTS = [
 const coastPath = (rings: Ring[], cx: number, cy: number, s: number) => {
   const hw = PLANE_W / 2 / s, hh = PLANE_H / 2 / s;
   const vx0 = cx - hw * 1.1, vx1 = cx + hw * 1.1, vy0 = cy - hh * 1.1, vy1 = cy + hh * 1.1;
+  const M = 300; // px margin outside the plane
   const out: string[] = [];
   for (const r of rings) {
     if (r.x1 < vx0 || r.x0 > vx1 || r.y1 < vy0 || r.y0 > vy1) continue;
     if ((r.x1 - r.x0) * s < 1.5 && (r.y1 - r.y0) * s < 1.5) continue;
     const p = r.pts;
-    let lx = -1e9, ly = -1e9;
-    const seg: string[] = [];
+    let lx = -1e9, ly = -1e9, open = false;
+    let seg: string[] = [];
+    const flush = () => {
+      if (seg.length > 1) out.push('M' + seg.join('L'));
+      seg = [];
+      open = false;
+    };
+    // Rings are clipped to the visible plane and emitted as open polylines:
+    // stroking long off-screen geometry inside the perspective plane is costly.
     for (let i = 0; i < p.length; i += 2) {
       const x = (p[i] - cx) * s + PLANE_W / 2;
       const y = (p[i + 1] - cy) * s + PLANE_H / 2;
-      if (i > 0 && i < p.length - 2 && Math.abs(x - lx) + Math.abs(y - ly) < 1.6) continue;
+      const inside = x > -M && y > -M && x < PLANE_W + M && y < PLANE_H + M;
+      if (!inside) {
+        if (open) {
+          seg.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+          flush();
+        }
+        lx = x; ly = y;
+        continue;
+      }
+      if (!open) {
+        if (lx > -1e8) seg.push(`${lx.toFixed(1)},${ly.toFixed(1)}`);
+        open = true;
+      } else if (Math.abs(x - lx) + Math.abs(y - ly) < 1.6 && i < p.length - 2) continue;
       seg.push(`${x.toFixed(1)},${y.toFixed(1)}`);
       lx = x; ly = y;
     }
-    if (seg.length > 2) out.push('M' + seg.join('L') + 'Z');
+    flush();
   }
   return out.join('');
 };
