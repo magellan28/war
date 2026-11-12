@@ -33,10 +33,11 @@ W = 100000.0
 
 REGIONS = {
     # name: (lon_min_east, lon_max_east, lat_min, lat_max, zoom, land_source)
-    "pacific": (100.0, 242.0, -4.0, 64.0, 6, "ne"),
+    "pacific": (62.0, 252.0, -16.0, 66.0, 6, "ne"),
     "hawaii": (197.6, 206.4, 18.2, 23.4, 10, "osm"),
     "oahu": (201.62, 202.42, 21.18, 21.80, 13, "osm"),
     "harbor": (201.94, 202.075, 21.30, 21.41, 15, "harbor"),
+    "row": (202.022, 202.062, 21.338, 21.378, 16, "harbor"),
 }
 
 
@@ -50,6 +51,11 @@ def lonlat_to_world(lon, lat):
 
 
 def fetch_tile(z, x, y):
+    if z > 15:  # terrarium tops out at z15: upsample the parent quadrant (bicubic)
+        k = 2 ** (z - 15)
+        parent = fetch_tile(15, x // k, y // k)
+        qx, qy = (x % k) * 256 // k, (y % k) * 256 // k
+        return ndimage.zoom(parent[qy:qy + 256 // k, qx:qx + 256 // k], k, order=3)
     n = 2 ** z
     xw = x % n
     p = os.path.join(CACHE, f"t{z}_{xw}_{y}.png")
@@ -167,7 +173,7 @@ def build(name):
     px_m = 40075016.0 * math.cos(math.radians(lat_c)) / (256 * n)
     e = ndimage.gaussian_filter(elev, 0.6)
     gy, gx = np.gradient(e, px_m)
-    exaggeration = {"pacific": 9.0, "hawaii": 2.6, "oahu": 1.6, "harbor": 1.3}[name]
+    exaggeration = {"pacific": 9.0, "hawaii": 2.6, "oahu": 1.6, "harbor": 1.3, "row": 1.2}[name]
     gx *= exaggeration
     gy *= exaggeration
     slope = np.arctan(np.hypot(gx, gy))
@@ -187,7 +193,7 @@ def build(name):
     mott /= mott.std() + 1e-6
 
     # land: graphite with cool tint, satellite-like mottling
-    hnorm = np.clip(elev / {"pacific": 3000, "hawaii": 3000, "oahu": 1000, "harbor": 300}[name], 0, 1)
+    hnorm = np.clip(elev / {"pacific": 3000, "hawaii": 3000, "oahu": 1000, "harbor": 300, "row": 300}[name], 0, 1)
     land_base = np.array([60, 68, 72], np.float32)
     land_rgb = (land_base
                 + rel[..., None] * np.array([175, 185, 190], np.float32)
@@ -211,7 +217,7 @@ def build(name):
     # coastline glow baked into the texture (soft, so it survives LOD scaling;
     # the crisp 1px line itself is drawn as a vector in the engine)
     edge = np.abs(m[..., 0] - ndimage.uniform_filter(m[..., 0], 3)) * 4
-    sig = {"pacific": 2.2, "hawaii": 3.0, "oahu": 5.0, "harbor": 6.0}[name]
+    sig = {"pacific": 2.2, "hawaii": 3.0, "oahu": 5.0, "harbor": 6.0, "row": 7.0}[name]
     glow = ndimage.gaussian_filter(edge, sig) * 3 + ndimage.gaussian_filter(edge, sig * 4) * 2.2
     rgb = rgb + np.clip(glow, 0, 1.4)[..., None] * np.array([40, 120, 118], np.float32)
     rgb8 = np.clip(rgb, 0, 255).astype(np.uint8)

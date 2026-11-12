@@ -3,3 +3,4 @@ out/
 data/geo/raw/
 data/geo/cache/
 *.log
+data/models/

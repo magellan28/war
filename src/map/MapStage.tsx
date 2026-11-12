@@ -37,6 +37,7 @@ const LAYERS: {key: RegionKey; vis: (z: number) => number}[] = [
   {key: 'hawaii', vis: (z) => smooth(z, 6.2, 7.2)},
   {key: 'oahu', vis: (z) => smooth(z, 9.0, 10.0)},
   {key: 'harbor', vis: (z) => smooth(z, 11.3, 12.1)},
+  {key: 'row', vis: (z) => smooth(z, 14.4, 15.1)},
 ];
 // Coast rings parsed once; each frame they are projected to plane pixels in JS,
 // culled and decimated. (Drawing huge world-unit paths under a scale transform

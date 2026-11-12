@@ -1,0 +1,566 @@
+{
+ "fps": 30,
+ "duration": 21561,
+ "chapters": [
+  {
+   "n": 1,
+   "title": "THE ATTACK",
+   "music": "tension",
+   "duration": 1214,
+   "credits": 0,
+   "filmFrom": 0,
+   "scenes": [
+    {
+     "id": "c1s1",
+     "kind": "map",
+     "from": 0,
+     "duration": 217,
+     "voiceAt": 48,
+     "voiceDur": 139,
+     "outTransition": "smoke",
+     "outOverlap": 24
+    },
+    {
+     "id": "c1s2",
+     "kind": "illustration",
+     "from": 193,
+     "duration": 501,
+     "voiceAt": 12,
+     "voiceDur": 462,
+     "outTransition": "flash",
+     "outOverlap": 14
+    },
+    {
+     "id": "c1s3",
+     "kind": "map",
+     "from": 680,
+     "duration": 534,
+     "voiceAt": 12,
+     "voiceDur": 414,
+     "outTransition": "chapterEnd",
+     "outOverlap": 0
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "title": "THE ROAD TO WAR",
+   "music": "history",
+   "duration": 2268,
+   "credits": 0,
+   "filmFrom": 1214,
+   "scenes": [
+    {
+     "id": "c2s1",
+     "kind": "map",
+     "from": 0,
+     "duration": 382,
+     "voiceAt": 75,
+     "voiceDur": 283,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c2s2",
+     "kind": "oil",
+     "from": 382,
+     "duration": 398,
+     "voiceAt": 12,
+     "voiceDur": 362,
+     "outTransition": "fade",
+     "outOverlap": 18
+    },
+    {
+     "id": "c2s3",
+     "kind": "map",
+     "from": 762,
+     "duration": 524,
+     "voiceAt": 12,
+     "voiceDur": 488,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c2s4",
+     "kind": "map",
+     "from": 1286,
+     "duration": 469,
+     "voiceAt": 9,
+     "voiceDur": 436,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c2s5",
+     "kind": "map",
+     "from": 1755,
+     "duration": 513,
+     "voiceAt": 9,
+     "voiceDur": 468,
+     "outTransition": "chapterEnd",
+     "outOverlap": 0
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "title": "YAMAMOTO'S STRATEGY",
+   "music": "strategy",
+   "duration": 2129,
+   "credits": 0,
+   "filmFrom": 3482,
+   "scenes": [
+    {
+     "id": "c3s1",
+     "kind": "dossier",
+     "from": 0,
+     "duration": 523,
+     "voiceAt": 75,
+     "voiceDur": 430,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c3s2",
+     "kind": "map",
+     "from": 505,
+     "duration": 350,
+     "voiceAt": 9,
+     "voiceDur": 320,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c3s3",
+     "kind": "card",
+     "from": 855,
+     "duration": 361,
+     "voiceAt": 9,
+     "voiceDur": 331,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c3s4",
+     "kind": "dossier",
+     "from": 1198,
+     "duration": 481,
+     "voiceAt": 9,
+     "voiceDur": 451,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c3s5",
+     "kind": "torpedo",
+     "from": 1679,
+     "duration": 450,
+     "voiceAt": 9,
+     "voiceDur": 405,
+     "outTransition": "chapterEnd",
+     "outOverlap": 0
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "title": "THE INTELLIGENCE WAR",
+   "music": "intel",
+   "duration": 3769,
+   "credits": 0,
+   "filmFrom": 5611,
+   "scenes": [
+    {
+     "id": "c4s1",
+     "kind": "document",
+     "from": 0,
+     "duration": 490,
+     "voiceAt": 75,
+     "voiceDur": 397,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c4s2",
+     "kind": "document",
+     "from": 472,
+     "duration": 310,
+     "voiceAt": 9,
+     "voiceDur": 283,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c4s3",
+     "kind": "map",
+     "from": 764,
+     "duration": 618,
+     "voiceAt": 9,
+     "voiceDur": 585,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c4s4",
+     "kind": "document",
+     "from": 1382,
+     "duration": 512,
+     "voiceAt": 9,
+     "voiceDur": 479,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c4s5",
+     "kind": "map",
+     "from": 1894,
+     "duration": 793,
+     "voiceAt": 9,
+     "voiceDur": 760,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c4s6",
+     "kind": "map",
+     "from": 2687,
+     "duration": 439,
+     "voiceAt": 9,
+     "voiceDur": 406,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c4s7",
+     "kind": "radar",
+     "from": 3108,
+     "duration": 661,
+     "voiceAt": 9,
+     "voiceDur": 610,
+     "outTransition": "chapterEnd",
+     "outOverlap": 0
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "title": "THE JAPANESE FLEET",
+   "music": "fleet",
+   "duration": 1564,
+   "credits": 0,
+   "filmFrom": 9380,
+   "scenes": [
+    {
+     "id": "c5s1",
+     "kind": "carriers",
+     "from": 0,
+     "duration": 457,
+     "voiceAt": 75,
+     "voiceDur": 361,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c5s2",
+     "kind": "carriers",
+     "from": 439,
+     "duration": 315,
+     "voiceAt": 9,
+     "voiceDur": 285,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c5s3",
+     "kind": "map",
+     "from": 736,
+     "duration": 357,
+     "voiceAt": 9,
+     "voiceDur": 327,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c5s4",
+     "kind": "map",
+     "from": 1093,
+     "duration": 216,
+     "voiceAt": 9,
+     "voiceDur": 186,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c5s5",
+     "kind": "map",
+     "from": 1309,
+     "duration": 255,
+     "voiceAt": 9,
+     "voiceDur": 210,
+     "outTransition": "chapterEnd",
+     "outOverlap": 0
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "title": "THE ATTACK UNFOLDS",
+   "music": "attack",
+   "duration": 3338,
+   "credits": 0,
+   "filmFrom": 10944,
+   "scenes": [
+    {
+     "id": "c6s1",
+     "kind": "launch",
+     "from": 0,
+     "duration": 495,
+     "voiceAt": 75,
+     "voiceDur": 402,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c6s2",
+     "kind": "map",
+     "from": 477,
+     "duration": 443,
+     "voiceAt": 9,
+     "voiceDur": 416,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c6s3",
+     "kind": "signal",
+     "from": 920,
+     "duration": 234,
+     "voiceAt": 6,
+     "voiceDur": 207,
+     "outTransition": "flash",
+     "outOverlap": 14
+    },
+    {
+     "id": "c6s4",
+     "kind": "map",
+     "from": 1140,
+     "duration": 351,
+     "voiceAt": 9,
+     "voiceDur": 324,
+     "outTransition": "fade",
+     "outOverlap": 18
+    },
+    {
+     "id": "c6s5",
+     "kind": "row",
+     "from": 1473,
+     "duration": 249,
+     "voiceAt": 6,
+     "voiceDur": 225,
+     "outTransition": "smoke",
+     "outOverlap": 24
+    },
+    {
+     "id": "c6s6",
+     "kind": "arizona",
+     "from": 1698,
+     "duration": 578,
+     "voiceAt": 6,
+     "voiceDur": 542,
+     "outTransition": "flash",
+     "outOverlap": 14
+    },
+    {
+     "id": "c6s7",
+     "kind": "map",
+     "from": 2262,
+     "duration": 573,
+     "voiceAt": 9,
+     "voiceDur": 546,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c6s8",
+     "kind": "map",
+     "from": 2817,
+     "duration": 521,
+     "voiceAt": 9,
+     "voiceDur": 470,
+     "outTransition": "chapterEnd",
+     "outOverlap": 0
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "title": "THE HUMAN COST",
+   "music": "elegy",
+   "duration": 2821,
+   "credits": 0,
+   "filmFrom": 14282,
+   "scenes": [
+    {
+     "id": "c7s1",
+     "kind": "stats",
+     "from": 0,
+     "duration": 580,
+     "voiceAt": 75,
+     "voiceDur": 475,
+     "outTransition": "fade",
+     "outOverlap": 18
+    },
+    {
+     "id": "c7s2",
+     "kind": "dossier",
+     "from": 562,
+     "duration": 680,
+     "voiceAt": 9,
+     "voiceDur": 650,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c7s3",
+     "kind": "dossier",
+     "from": 1224,
+     "duration": 400,
+     "voiceAt": 9,
+     "voiceDur": 370,
+     "outTransition": "fade",
+     "outOverlap": 18
+    },
+    {
+     "id": "c7s4",
+     "kind": "rescue",
+     "from": 1606,
+     "duration": 439,
+     "voiceAt": 9,
+     "voiceDur": 406,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c7s5",
+     "kind": "dossier",
+     "from": 2027,
+     "duration": 794,
+     "voiceAt": 9,
+     "voiceDur": 743,
+     "outTransition": "chapterEnd",
+     "outOverlap": 0
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "title": "AMERICA AWAKENS",
+   "music": "resolve",
+   "duration": 1831,
+   "credits": 0,
+   "filmFrom": 17103,
+   "scenes": [
+    {
+     "id": "c8s1",
+     "kind": "speech",
+     "from": 0,
+     "duration": 652,
+     "voiceAt": 75,
+     "voiceDur": 553,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c8s2",
+     "kind": "vote",
+     "from": 652,
+     "duration": 429,
+     "voiceAt": 9,
+     "voiceDur": 399,
+     "outTransition": "wipe",
+     "outOverlap": 18
+    },
+    {
+     "id": "c8s3",
+     "kind": "industry",
+     "from": 1063,
+     "duration": 296,
+     "voiceAt": 9,
+     "voiceDur": 266,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c8s4",
+     "kind": "shipyard",
+     "from": 1359,
+     "duration": 472,
+     "voiceAt": 9,
+     "voiceDur": 427,
+     "outTransition": "chapterEnd",
+     "outOverlap": 0
+    }
+   ]
+  },
+  {
+   "n": 9,
+   "title": "THE HISTORICAL CONSEQUENCE",
+   "music": "finale",
+   "duration": 2627,
+   "credits": 240,
+   "filmFrom": 18934,
+   "scenes": [
+    {
+     "id": "c9s1",
+     "kind": "map",
+     "from": 0,
+     "duration": 613,
+     "voiceAt": 75,
+     "voiceDur": 520,
+     "outTransition": "cut",
+     "outOverlap": 0
+    },
+    {
+     "id": "c9s2",
+     "kind": "map",
+     "from": 613,
+     "duration": 312,
+     "voiceAt": 9,
+     "voiceDur": 282,
+     "outTransition": "fade",
+     "outOverlap": 18
+    },
+    {
+     "id": "c9s3",
+     "kind": "card",
+     "from": 907,
+     "duration": 434,
+     "voiceAt": 9,
+     "voiceDur": 404,
+     "outTransition": "flash",
+     "outOverlap": 14
+    },
+    {
+     "id": "c9s4",
+     "kind": "contrast",
+     "from": 1327,
+     "duration": 467,
+     "voiceAt": 9,
+     "voiceDur": 434,
+     "outTransition": "fade",
+     "outOverlap": 18
+    },
+    {
+     "id": "c9s5",
+     "kind": "memorial",
+     "from": 1776,
+     "duration": 611,
+     "voiceAt": 9,
+     "voiceDur": 467,
+     "outTransition": "chapterEnd",
+     "outOverlap": 0
+    }
+   ]
+  }
+ ]
+}
