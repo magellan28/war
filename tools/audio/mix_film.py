@@ -59,7 +59,7 @@ def put(buf, clip, t, gain=1.0, pan=0.0):
 
 def env_adsr(n, a=0.5, r=1.0):
     e = np.ones(n, np.float32)
-    na, nr = int(a * SR), int(r * SR)
+    na, nr = min(int(a * SR), n // 2), min(int(r * SR), n // 2)
     if na:
         e[:na] = np.linspace(0, 1, na)
     if nr:
@@ -150,7 +150,7 @@ def score(mood, t0, dur, seed):
     k = 0
     while t < dur:
         chord = prog[k % len(prog)]
-        cl = min(clen + 1.5, dur - t + 0.5)
+        cl = max(3.0, min(clen + 1.5, dur - t + 0.5))
         put(music, pad(chord, cl, bright, a=1.2, r=1.8), t0 + t, 0.22)
         put(music, sub(chord[0] / 2 if chord[0] > 80 else chord[0], cl, 1.0, 1.5), t0 + t, 0.18)
         if bells and k % 2 == 0:

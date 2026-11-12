@@ -355,7 +355,7 @@ export const C4S5: React.FC = () => {
         </>
       }
     >
-      <Label at={[240.5, 36]} text="← WASHINGTON, D.C." sub="off map" start={20} size={22} align="right" />
+      <Label at={[244, 42]} text="WASHINGTON, D.C. →" sub="off map, east" start={20} size={22} align="left" dx={0} />
       <Marker at={[237.6, 37.78]} color={C.us} glow={C.usGlow} start={s(2)} r={7} pulse={false} />
       <Label at={[237.6, 37.78]} text="San Francisco" start={s(2) + 6} size={20} weight={600} align="right" />
       <Route points={[[242, 37.5], [237.6, 37.78], [220, 31], [202.2, 21.35]]} progress={ramp(f, s(2) + 10, s(2) + 110)} color={C.route} spacing={60} />

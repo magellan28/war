@@ -15,7 +15,7 @@ const composition = await selectComposition({serveUrl, id: 'Film', browserExecut
 fs.mkdirSync('out/qa', {recursive: true});
 for (const ch of layout.chapters) {
   for (const sc of ch.scenes) {
-    if (filter && !sc.id.startsWith(filter)) continue;
+    if (filter && !filter.split(',').some((p) => sc.id.startsWith(p))) continue;
     for (const p of pos) {
       const frame = ch.filmFrom + sc.from + Math.round(sc.voiceAt + sc.voiceDur * p);
       const t0 = Date.now();
