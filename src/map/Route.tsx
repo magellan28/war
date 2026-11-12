@@ -33,6 +33,11 @@ export const Route: React.FC<{
   // drawn polyline up to head
   const end = pointAt(screen, L, head);
   const drawn = screen.slice(0, end.index).concat([[end.x, end.y]]);
+  let bx0 = Infinity, by0 = Infinity, bx1 = -Infinity, by1 = -Infinity;
+  for (const [x, y] of drawn) {
+    bx0 = Math.min(bx0, x); by0 = Math.min(by0, y); bx1 = Math.max(bx1, x); by1 = Math.max(by1, y);
+  }
+  bx0 = Math.max(-400, bx0 - 40); by0 = Math.max(-400, by0 - 40); bx1 = Math.min(PLANE_W + 400, bx1 + 40); by1 = Math.min(PLANE_H + 400, by1 + 40);
   const d = 'M' + drawn.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join('L');
 
   const chevrons: React.ReactNode[] = [];
@@ -57,7 +62,13 @@ export const Route: React.FC<{
   }
 
   return (
-    <svg width={PLANE_W} height={PLANE_H} style={{position: 'absolute', inset: 0, overflow: 'visible', opacity}}>
+    // Size the SVG to the drawn route only: full-plane SVGs are very costly to rasterise.
+    <svg
+      width={Math.max(1, bx1 - bx0)}
+      height={Math.max(1, by1 - by0)}
+      viewBox={`${bx0} ${by0} ${Math.max(1, bx1 - bx0)} ${Math.max(1, by1 - by0)}`}
+      style={{position: 'absolute', left: bx0, top: by0, overflow: 'visible', opacity}}
+    >
       <path d={d} fill="none" stroke={glow} strokeWidth={6} opacity={0.18} strokeLinecap="round" />
       <path
         d={d}
