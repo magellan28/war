@@ -8,7 +8,7 @@ cd "$(dirname "$0")/../.."
 SCALE=${1:-1}; TAG=${2:-1080p}
 OUT=out/$TAG; mkdir -p "$OUT/chunks"
 LOG=$OUT/render.log
-CHUNK=300
+CHUNK=90
 for n in 1 2 3 4 5 6 7 8 9; do
   [ -s "$OUT/ch$n.mp4" ] && continue
   DUR=$(python3 -c "import json;print(json.load(open('src/data/layout.json'))['chapters'][$n-1]['duration'])")

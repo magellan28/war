@@ -40,6 +40,13 @@ export const Route: React.FC<{
   bx0 = Math.max(-400, bx0 - 40); by0 = Math.max(-400, by0 - 40); bx1 = Math.min(PLANE_W + 400, bx1 + 40); by1 = Math.min(PLANE_H + 400, by1 + 40);
   const d = 'M' + drawn.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join('L');
 
+  const dots: React.ReactNode[] = [];
+  if (dashed || true) {
+    for (let dist = 4; dist < head - 6; dist += 11) {
+      const p = pointAt(screen, L, dist);
+      dots.push(<circle key={'d' + dist} cx={p.x} cy={p.y} r={1.4} fill={color} opacity={0.75} />);
+    }
+  }
   const chevrons: React.ReactNode[] = [];
   const phase = (frame * speed) % spacing;
   for (let dist = head - phase; dist > 0; dist -= spacing) {
@@ -69,16 +76,9 @@ export const Route: React.FC<{
       viewBox={`${bx0} ${by0} ${Math.max(1, bx1 - bx0)} ${Math.max(1, by1 - by0)}`}
       style={{position: 'absolute', left: bx0, top: by0, overflow: 'visible', opacity}}
     >
-      <path d={d} fill="none" stroke={glow} strokeWidth={6} opacity={0.18} strokeLinecap="round" />
-      <path
-        d={d}
-        fill="none"
-        stroke={color}
-        strokeWidth={1.6}
-        opacity={0.7}
-        strokeDasharray={dashed ? '2 9' : undefined}
-        strokeLinecap="round"
-      />
+      {/* Guide line as a dotted trail: long stroked paths inside the
+          perspective plane can be pathologically slow to rasterise. */}
+      {dots}
       {chevrons}
       <circle cx={end.x} cy={end.y} r={5} fill="#fff" opacity={progress < 1 ? 0.95 : 0} />
       <circle cx={end.x} cy={end.y} r={16} fill={glow} opacity={progress < 1 ? 0.4 : 0} />
