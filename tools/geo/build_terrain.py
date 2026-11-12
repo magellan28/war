@@ -199,6 +199,12 @@ def build(name):
 
     m = ndimage.gaussian_filter(mask, 0.8)[..., None]
     rgb = land_rgb * m + sea_rgb * (1 - m)
+    # coastline glow baked into the texture (soft, so it survives LOD scaling;
+    # the crisp 1px line itself is drawn as a vector in the engine)
+    edge = np.abs(m[..., 0] - ndimage.uniform_filter(m[..., 0], 3)) * 4
+    sig = {"pacific": 2.2, "hawaii": 3.0, "oahu": 5.0}[name]
+    glow = ndimage.gaussian_filter(edge, sig) * 3 + ndimage.gaussian_filter(edge, sig * 4) * 2.2
+    rgb = rgb + np.clip(glow, 0, 1.4)[..., None] * np.array([40, 120, 118], np.float32)
     rgb8 = np.clip(rgb, 0, 255).astype(np.uint8)
     if name == "pacific":
         alpha = np.full((H, Wp), 255, np.uint8)

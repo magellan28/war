@@ -36,26 +36,55 @@ const LAYERS: {key: RegionKey; vis: (z: number) => number}[] = [
   {key: 'hawaii', vis: (z) => smooth(z, 6.2, 7.2)},
   {key: 'oahu', vis: (z) => smooth(z, 9.0, 10.0)},
 ];
+// Coast rings parsed once; each frame they are projected to plane pixels in JS,
+// culled and decimated. (Drawing huge world-unit paths under a scale transform
+// inside a 3D-tilted plane is ~25x slower in software rasterisation.)
+type Ring = {pts: Float64Array; x0: number; y0: number; x1: number; y1: number};
+const parseRings = (d: string): Ring[] =>
+  d
+    .split('M')
+    .filter(Boolean)
+    .map((r) => {
+      const nums = r.replace('Z', '').split('L').flatMap((p) => p.split(',').map(Number));
+      const pts = Float64Array.from(nums);
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (let i = 0; i < pts.length; i += 2) {
+        x0 = Math.min(x0, pts[i]); x1 = Math.max(x1, pts[i]);
+        y0 = Math.min(y0, pts[i + 1]); y1 = Math.max(y1, pts[i + 1]);
+      }
+      return {pts, x0, y0, x1, y1};
+    });
 const COASTS = [
-  {d: coastPacific.d, vis: (z: number) => 1 - smooth(z, 6.4, 7.2)},
-  {d: coastHawaii.d, vis: (z: number) => smooth(z, 6.4, 7.2) * (1 - smooth(z, 9.6, 10.2))},
-  {d: coastOahu.d, vis: (z: number) => smooth(z, 9.6, 10.2)},
+  {rings: parseRings(coastPacific.d), vis: (z: number) => 1 - smooth(z, 6.4, 7.2)},
+  {rings: parseRings(coastHawaii.d), vis: (z: number) => smooth(z, 6.4, 7.2) * (1 - smooth(z, 9.6, 10.2))},
+  {rings: parseRings(coastOahu.d), vis: (z: number) => smooth(z, 9.6, 10.2)},
 ];
 
-const graticule = (() => {
-  const parts: string[] = [];
-  for (let lon = 100; lon <= 240; lon += 5) {
-    const [x, y0] = toWorld([lon, 64]);
-    const [, y1] = toWorld([lon, -4]);
-    parts.push(`M${x},${y0}L${x},${y1}`);
+const coastPath = (rings: Ring[], cx: number, cy: number, s: number) => {
+  const hw = PLANE_W / 2 / s, hh = PLANE_H / 2 / s;
+  const vx0 = cx - hw * 1.1, vx1 = cx + hw * 1.1, vy0 = cy - hh * 1.1, vy1 = cy + hh * 1.1;
+  const out: string[] = [];
+  for (const r of rings) {
+    if (r.x1 < vx0 || r.x0 > vx1 || r.y1 < vy0 || r.y0 > vy1) continue;
+    if ((r.x1 - r.x0) * s < 1.5 && (r.y1 - r.y0) * s < 1.5) continue;
+    const p = r.pts;
+    let lx = -1e9, ly = -1e9;
+    const seg: string[] = [];
+    for (let i = 0; i < p.length; i += 2) {
+      const x = (p[i] - cx) * s + PLANE_W / 2;
+      const y = (p[i + 1] - cy) * s + PLANE_H / 2;
+      if (i > 0 && i < p.length - 2 && Math.abs(x - lx) + Math.abs(y - ly) < 1.6) continue;
+      seg.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+      lx = x; ly = y;
+    }
+    if (seg.length > 2) out.push('M' + seg.join('L') + 'Z');
   }
-  for (let lat = 0; lat <= 60; lat += 5) {
-    const [x0, y] = toWorld([100, lat]);
-    const [x1] = toWorld([240, lat]);
-    parts.push(`M${x0},${y}L${x1},${y}`);
-  }
-  return parts.join('');
-})();
+  return out.join('');
+};
+
+const graticule: [[number, number], [number, number]][] = [];
+for (let lon = 100; lon <= 240; lon += 5) graticule.push([toWorld([lon, 64]), toWorld([lon, -4])]);
+for (let lat = 0; lat <= 60; lat += 5) graticule.push([toWorld([100, lat]), toWorld([240, lat])]);
 
 export const MapStage: React.FC<{cam: Cam; children?: React.ReactNode; overlay?: React.ReactNode}> = ({cam, children, overlay}) => {
   const {width, height} = useVideoConfig();
@@ -64,8 +93,11 @@ export const MapStage: React.FC<{cam: Cam; children?: React.ReactNode; overlay?:
     const projectWorld = (x: number, y: number): [number, number] => [(x - cam.cx) * s + PLANE_W / 2, (y - cam.cy) * s + PLANE_H / 2];
     return {cam, s, projectWorld, project: (ll) => projectWorld(...toWorld(ll))};
   }, [cam, s]);
-  const tx = -cam.cx * s + PLANE_W / 2;
-  const ty = -cam.cy * s + PLANE_H / 2;
+  const graticuleD = graticule.map(([a, b]) => {
+    const [x0, y0] = ctx.projectWorld(...a);
+    const [x1, y1] = ctx.projectWorld(...b);
+    return `M${x0.toFixed(1)},${y0.toFixed(1)}L${x1.toFixed(1)},${y1.toFixed(1)}`;
+  }).join('');
 
   return (
     <AbsoluteFill style={{background: C.bg, overflow: 'hidden', perspective: 1500, perspectiveOrigin: '50% 30%'}}>
@@ -100,20 +132,17 @@ export const MapStage: React.FC<{cam: Cam; children?: React.ReactNode; overlay?:
           });
         })}
         <svg width={PLANE_W} height={PLANE_H} style={{position: 'absolute', inset: 0, overflow: 'visible'}}>
-          <g transform={`translate(${tx},${ty}) scale(${s})`}>
-            <path d={graticule} fill="none" stroke="rgba(160,210,220,0.07)" strokeWidth={1 / s} />
-            {COASTS.map(({d, vis}, i) => {
-              const o = vis(cam.zoom);
-              if (o <= 0.001) return null;
-              return (
-                <g key={i} opacity={o} fill="none" strokeLinejoin="round">
-                  <path d={d} stroke={C.coastGlow} strokeWidth={7 / s} opacity={0.35} />
-                  <path d={d} stroke={C.coastGlow} strokeWidth={3.2 / s} />
-                  <path d={d} stroke={C.coast} strokeWidth={1.25 / s} />
-                </g>
-              );
-            })}
-          </g>
+          <path d={graticuleD} fill="none" stroke="rgba(160,210,220,0.07)" strokeWidth={1} />
+          {COASTS.map(({rings, vis}, i) => {
+            const o = vis(cam.zoom);
+            if (o <= 0.001) return null;
+            const d = coastPath(rings, cam.cx, cam.cy, s);
+            return (
+              <g key={i} opacity={o < 0.999 ? o : undefined} fill="none" strokeLinejoin="round">
+                <path d={d} stroke={C.coast} strokeWidth={1.25} />
+              </g>
+            );
+          })}
         </svg>
         <MapCtx.Provider value={ctx}>{children}</MapCtx.Provider>
       </div>
