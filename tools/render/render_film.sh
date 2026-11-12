@@ -31,5 +31,5 @@ printf "file '$PWD/$OUT/ch%d.mp4'\n" 1 2 3 4 5 6 7 8 9 > "$OUT/list.txt"
 ffmpeg -y -hide_banner -loglevel error -f concat -safe 0 -i "$OUT/list.txt" -c copy "$OUT/video.mp4"
 ffmpeg -y -hide_banner -loglevel error -i "$OUT/video.mp4" -i public/audio/film_mix.wav -i subtitles/pearl_harbor_en.srt \
   -map 0:v -map 1:a -map 2:s -c:v copy -c:a aac -b:a 320k -ar 48000 -c:s mov_text -metadata:s:s:0 language=eng \
-  -metadata title="Pearl Harbor: December 7, 1941" -movflags +faststart -shortest "$OUT/pearl_harbor_$TAG.mp4"
+  -metadata title="Pearl Harbor: December 7, 1941" -movflags +faststart -t $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT/video.mp4") "$OUT/pearl_harbor_$TAG.mp4"
 echo "$(date +%T) FINAL $OUT/pearl_harbor_$TAG.mp4" >> "$LOG"
