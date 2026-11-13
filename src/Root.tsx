@@ -6,6 +6,7 @@ import {Chapter} from './film/Chapter';
 import {Film} from './film/Film';
 import layout from './data/layout.json';
 import {FPS} from './theme';
+import {Thumbnail} from './thumb/Thumbnail';
 
 loadFonts();
 
@@ -17,6 +18,7 @@ export const RemotionRoot: React.FC = () => (
     {layout.chapters.map((c) => (
       <Composition key={c.n} id={`Chapter${c.n}`} component={() => <Chapter n={c.n} />} durationInFrames={c.duration} fps={FPS} width={1920} height={1080} />
     ))}
+    <Composition id="Thumbnail" component={Thumbnail} durationInFrames={1} fps={FPS} width={1920} height={1080} />
     <Composition id="Prototype" component={Prototype} durationInFrames={750} fps={FPS} width={1920} height={1080} />
   </>
 );
